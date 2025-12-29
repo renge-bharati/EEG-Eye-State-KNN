@@ -13,11 +13,11 @@ st.set_page_config(
 )
 
 # -----------------------------
-# Safe pickle loader
+# Helper function to safely load pickle files
 # -----------------------------
 def load_pickle(file_name):
     if not os.path.exists(file_name):
-        st.error(f"❌ File not found: {file_name}")
+        st.error(f"❌ Required file not found: {file_name}")
         st.stop()
     with open(file_name, "rb") as f:
         return pickle.load(f)
@@ -26,7 +26,7 @@ def load_pickle(file_name):
 # Load model and scaler
 # -----------------------------
 model = load_pickle("knn_eeg_model.pkl")
-scaler = load_pickle("scalar(1).pkl")   # 👈 YOUR FILE NAME
+scaler = load_pickle("scaler.pkl")   # 👈 Correct file name now
 
 # -----------------------------
 # App UI
@@ -40,7 +40,7 @@ st.write(
 st.divider()
 
 # -----------------------------
-# EEG Input Fields
+# Input fields for EEG sensors
 # -----------------------------
 st.subheader("Enter EEG Sensor Values")
 
