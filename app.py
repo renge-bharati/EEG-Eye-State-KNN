@@ -17,7 +17,7 @@ def load_pickle(file_name):
 # Load model and scaler
 # -----------------------------
 model = load_pickle("knn_eeg_model.pkl")
-scaler = load_pickle("scaler.pkl")
+scaler = load_pickle("scaler(1).pkl")
 
 # -----------------------------
 # App UI
