@@ -4,7 +4,16 @@ import pickle
 import os
 
 # -----------------------------
-# Helper function to load files safely
+# Page configuration
+# -----------------------------
+st.set_page_config(
+    page_title="EEG Eye State Detection",
+    page_icon="🧠",
+    layout="centered"
+)
+
+# -----------------------------
+# Safe pickle loader
 # -----------------------------
 def load_pickle(file_name):
     if not os.path.exists(file_name):
@@ -17,18 +26,21 @@ def load_pickle(file_name):
 # Load model and scaler
 # -----------------------------
 model = load_pickle("knn_eeg_model.pkl")
-scaler = load_pickle("scaler(1).pkl")
+scaler = load_pickle("scalar(1).pkl")   # 👈 YOUR FILE NAME
 
 # -----------------------------
 # App UI
 # -----------------------------
-st.set_page_config(page_title="EEG Eye State Detection", layout="centered")
-
 st.title("🧠 EEG Eye State Detection using KNN")
-st.write("Predict whether eyes are **OPEN** or **CLOSED** using EEG signals")
+st.write(
+    "Predict whether a person's eyes are **OPEN** or **CLOSED** "
+    "using EEG brain signal values."
+)
+
+st.divider()
 
 # -----------------------------
-# Input Fields
+# EEG Input Fields
 # -----------------------------
 st.subheader("Enter EEG Sensor Values")
 
@@ -39,8 +51,10 @@ sensor_names = [
 
 features = []
 for sensor in sensor_names:
-    value = st.number_input(sensor, value=0.0)
+    value = st.number_input(sensor, value=0.0, format="%.4f")
     features.append(value)
+
+st.divider()
 
 # -----------------------------
 # Prediction
@@ -48,9 +62,11 @@ for sensor in sensor_names:
 if st.button("Predict Eye State"):
     input_data = np.array(features).reshape(1, -1)
     input_scaled = scaler.transform(input_data)
-    prediction = model.predict(input_scaled)
+    prediction = model.predict(input_scaled)[0]
 
-    if prediction[0] == 0:
-        st.success("👁️ Eyes are OPEN")
+    if prediction == 0:
+        st.success("👁️ Eyes are **OPEN**")
     else:
-        st.error("👁️ Eyes are CLOSED")
+        st.error("👁️ Eyes are **CLOSED**")
+
+st.caption("Model: KNN | Dataset: EEG Eye State")
