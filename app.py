@@ -1,15 +1,23 @@
 import streamlit as st
 import numpy as np
 import pickle
+import os
 
 # -----------------------------
-# Load Model and Scaler
+# Helper function to load files safely
 # -----------------------------
-with open("knn_eeg_model.pkl", "rb") as f:
-    model = pickle.load(f)
+def load_pickle(file_name):
+    if not os.path.exists(file_name):
+        st.error(f"❌ File not found: {file_name}")
+        st.stop()
+    with open(file_name, "rb") as f:
+        return pickle.load(f)
 
-with open("scaler.pkl", "rb") as f:
-    scaler = pickle.load(f)
+# -----------------------------
+# Load model and scaler
+# -----------------------------
+model = load_pickle("knn_eeg_model.pkl")
+scaler = load_pickle("scaler.pkl")
 
 # -----------------------------
 # App UI
@@ -20,18 +28,18 @@ st.title("🧠 EEG Eye State Detection using KNN")
 st.write("Predict whether eyes are **OPEN** or **CLOSED** using EEG signals")
 
 # -----------------------------
-# Input Fields (14 EEG Sensors)
+# Input Fields
 # -----------------------------
 st.subheader("Enter EEG Sensor Values")
 
-features = []
 sensor_names = [
     "AF3", "F7", "F3", "FC5", "T7", "P7", "O1",
     "O2", "P8", "T8", "FC6", "F4", "F8", "AF4"
 ]
 
+features = []
 for sensor in sensor_names:
-    value = st.number_input(f"{sensor}", value=0.0)
+    value = st.number_input(sensor, value=0.0)
     features.append(value)
 
 # -----------------------------
